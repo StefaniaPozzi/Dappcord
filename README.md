@@ -2,15 +2,9 @@
 
 ## Technology Stack & Tools
 
-- Solidity (Writing Smart Contracts & Tests)
-- Javascript (React & Testing)
-- [Hardhat](https://hardhat.org/) (Development Framework)
-- [Ethers.js](https://docs.ethers.io/v5/) (Blockchain Interaction)
-- [React.js](https://reactjs.org/) (Frontend Framework)
-- [Socket.io](https://socket.io/) (Client & Server communication)
+- Solidity, Javascript, [Hardhat](https://hardhat.org/), [Ethers.js](https://docs.ethers.io/v5/) (Blockchain Interaction),[React.js](https://reactjs.org/), [Socket.io](https://socket.io/), [NodeJS](https://nodejs.org/en/)
+- NTF: [ERC-721](https://ethereum.org/en/developers/docs/standards/tokens/erc-721/#top
 
-## Requirements For Initial Setup
-- Install [NodeJS](https://nodejs.org/en/)
 
 ## Setting Up
 ### 1. Clone/Download the Repository
