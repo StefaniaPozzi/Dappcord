@@ -8,7 +8,6 @@ describe("Dappcord", function () {
   const SYMBOL = "MTN";
   const CHANNEL_NAME = "General channel";
   const CHANNEL_COST = ethers.utils.parseUnits("0.1", "ether");
-  const MORE_THAN_CHANNEL_COST = ethers.utils.parseUnits("1", "ether");
 
   beforeEach(async () => {
     //setup accounts
