@@ -1,10 +1,16 @@
-const Channels = ({ provider, account, dappcord, channels, currentChannel, setCurrentChannel }) => {
-
+const Channels = ({ account, provider, contract, channels }) => {
   return (
     <div className="channels">
       <div className="channels__text">
         <h2>Text Channels</h2>
 
+        <ul>
+          {channels.map((channel, index) => (
+            <li key={index} onClick="">
+              {channel.name}
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="channels__voice">
@@ -18,6 +24,6 @@ const Channels = ({ provider, account, dappcord, channels, currentChannel, setCu
       </div>
     </div>
   );
-}
+};
 
 export default Channels;

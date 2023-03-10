@@ -1,4 +1,6 @@
-# Dappcord
+# Dapp - Discord
+
+Decentralized application that enables users to mint NFTs and partecipate in a discord-style chat.
 
 ## Technology Stack & Tools
 
