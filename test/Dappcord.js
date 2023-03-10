@@ -1,16 +1,14 @@
 const { expect } = require("chai");
 
-const tokens = (n) => {
-  return ethers.utils.parseUnits(n.toString(), "ether");
-};
-
 describe("Dappcord", function () {
   let dappcordContract;
   let deployer, user;
+  const ID = 1;
   const NAME = "MyTokenName";
   const SYMBOL = "MTN";
   const CHANNEL_NAME = "General channel";
-  const CHANNEL_COST = tokens(0.1);
+  const CHANNEL_COST = ethers.utils.parseUnits("0.1", "ether");
+  const MORE_THAN_CHANNEL_COST = ethers.utils.parseUnits("1", "ether");
 
   beforeEach(async () => {
     //setup accounts
@@ -26,6 +24,7 @@ describe("Dappcord", function () {
       .createChannel(CHANNEL_NAME, CHANNEL_COST);
     await tx.wait();
   });
+
   describe("Deployment", () => {
     it("sets name and symbol", async () => {
       let name = await dappcordContract.name();
@@ -38,17 +37,62 @@ describe("Dappcord", function () {
       expect(owner).to.equal(deployer.address);
     });
   });
-  describe("Managing channels", () => {
+  describe("Create channels", () => {
     it("returns total channels", async () => {
       const totalChannels = await dappcordContract.totalChannels();
-      expect(totalChannels).to.be.equal(1);
+      expect(totalChannels).to.be.equal(ID);
     });
     it("returns channel attributes", async () => {
-      const channel = await dappcordContract.getChannel(1);
-      expect(channel.id).to.be.equal(1);
+      const channel = await dappcordContract.getChannel(ID);
+      expect(channel.id).to.be.equal(ID);
       expect(channel.name).to.be.equal(CHANNEL_NAME);
       expect(channel.cost).to.be.equal(CHANNEL_COST);
-    } );
-    
+    });
+  });
+  describe("Join channels", () => {
+    beforeEach(async () => {
+      const tx = await dappcordContract
+        .connect(user)
+        .mint(ID, { value: CHANNEL_COST });
+      await tx.wait();
+    });
+    it("Join the user", async () => {
+      const hasJoined = await dappcordContract.hasJoined(ID, user.address);
+      expect(hasJoined).to.be.equal(true);
+    });
+    it("Increase supply", async () => {
+      const supply = await dappcordContract.totalSupply();
+      expect(supply).to.be.equal(ID);
+    });
+    it("Updates contract balance", async () => {
+      const balance = await ethers.provider.getBalance(
+        dappcordContract.address
+      );
+      expect(balance).to.be.equal(CHANNEL_COST);
+    });
+  });
+  describe("withdraw", () => {
+    let balance_0;
+    let balance_1;
+    beforeEach(async () => {
+      balance_0 = await ethers.provider.getBalance(deployer.address);
+      let mint_tx = await dappcordContract
+        .connect(user)
+        .mint(ID, { value: CHANNEL_COST });
+      await mint_tx.wait();
+      let with_tx = await dappcordContract.connect(deployer).withdraw();
+      await with_tx;
+    });
+
+    it("Update owner balance", async () => {
+      balance_1 = await ethers.provider.getBalance(deployer.address);
+      expect(balance_1).to.be.greaterThan(balance_0);
+    });
+    it("Update contract balance", async () => {
+      const contract_balance = await ethers.provider.getBalance(
+        dappcordContract.address
+      );
+      expect(contract_balance).to.equal(0);
+    });
   });
 });
