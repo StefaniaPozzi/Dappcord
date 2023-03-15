@@ -32,19 +32,19 @@ contract Dappcord is ERC721{
         channels[totalChannels] = Channel(totalChannels, _name, _NFTJoinCost);
     }
 
-    function getChannel(uint256 _id) public view returns (Channel memory){
-        return channels[_id];
+    function getChannel(uint256 _channelId) public view returns (Channel memory){
+        return channels[_channelId];
     }
 
-    function mint(uint256 _id) public payable{
+    function mint(uint256 _channelId) public payable {
         //join channel
-        require(_id != 0);
-        require(_id <= totalChannels);
+        require(_channelId != 0);
+        require(_channelId <= totalChannels);
 
-        require(!hasJoined[_id][msg.sender]);
-        require(msg.value >= channels[_id].cost);
+        require(!hasJoined[_channelId][msg.sender]);
+        require(msg.value >= channels[_channelId].cost);
 
-        hasJoined[_id][msg.sender] = true; // sender: the address who called the function
+        hasJoined[_channelId][msg.sender] = true; // sender: the address who called the function
         //mint NFT
         totalSupply++;
         _safeMint(msg.sender, totalSupply);

@@ -15,13 +15,15 @@ import abi from "./abis/Dappcord.json";
 import config from "./config.json";
 
 // Socket
-//const socket = io("ws://localhost:3030");
+const socket = io("ws://localhost:3030");
 
 function App() {
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
   const [contract, setContract] = useState(null);
-  const [channels, setChannels] = useState(null);
+  const [channels, setChannels] = useState([]);
+  const [currentChannel, setCurrentChannel] = useState(null);
+  const [messages, setMessages] = useState([]);
 
   const loadBlockchainData = async () => {
     //retrieve provider(network) and contract
@@ -39,12 +41,11 @@ function App() {
     //retrieve channels
     const totalChannels = await contract.totalChannels();
     const channels = [];
-    for (var i = 1; i <= totalChannels; i++) {
+    for (var i = 0; i < totalChannels; i++) {
       channels.push(await contract.getChannel(i));
     }
     setChannels(channels);
 
-    console.log(channels);
     window.ethereum.on("accountsChanged", async () => {
       window.location.reload();
     });
@@ -52,6 +53,25 @@ function App() {
 
   useEffect(() => {
     loadBlockchainData();
+
+    socket.on("connect", () => {
+      socket.emit("get messages");
+      console.log("socket connected..");
+    });
+
+    socket.on("new message", (message) => {
+      setMessages(messages);
+    });
+
+    socket.on("get messages", (messages) => {
+      setMessages(messages);
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("new message");
+      socket.off("get messages");
+    };
   }, []);
 
   return (
@@ -65,8 +85,14 @@ function App() {
           provider={provider}
           contract={contract}
           channels={channels}
+          currentChannel={currentChannel}
+          setCurrentChannel={setCurrentChannel}
         />
-        <Messages />
+        <Messages
+          account={account}
+          messages={messages}
+          currentChannel={currentChannel}
+        />
       </main>
     </div>
   );
