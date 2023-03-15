@@ -14,4 +14,6 @@ Decentralized application that enables users to mint NFTs and partecipate in a d
 `$ npm run start`
 `$ node server.js`
 
+access the app @ localhost:3000
+
 
