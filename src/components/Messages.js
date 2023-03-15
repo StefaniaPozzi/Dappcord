@@ -26,9 +26,9 @@ const Messages = ({ account, messages, currentChannel }) => {
   //   }, 500);
   // };
 
-  useEffect(() => {
-    scrollHandler();
-  });
+  // useEffect(() => {
+  //   scrollHandler();
+  // });
 
   return (
     <div className="text">
